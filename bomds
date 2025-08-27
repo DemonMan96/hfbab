@@ -163,26 +163,22 @@ local function CleanAndReduce(msg)
     msg = string.gsub(msg, "ö","o")
     msg = string.gsub(msg, "ü","u")
     msg = string.gsub(msg, "[^%a%s]", "") -- sadece harf ve boşluk
+    -- Kelime kelime harf tekrarı azalt
     local result = {}
     for w in string.gmatch(msg, "%S+") do
-        table.insert(result, ReduceRepeats(w))
+        table.insert(result, w:gsub("(%a)%1+", "%1"))
     end
-    return table.concat(result, " ")
+    return result -- kelime listesi olarak döner
 end
 
 -- Rakibin hamlesini algılama
 local function DetectMove(msg)
-    msg = CleanAndReduce(msg)
-    local words = {}
-    for w in string.gmatch(msg, "%S+") do
-        table.insert(words, w)
-    end
+    local words = CleanAndReduce(msg)
 
     for _, word in ipairs(words) do
         for move, aliases in pairs(MoveMap) do
             for _, alias in ipairs(aliases) do
-                local normAlias = ReduceRepeats(string.lower(alias):gsub("ğ","g"):gsub("ı","i"):gsub("ş","s"):gsub("ç","c"):gsub("ö","o"):gsub("ü","u"))
-                if word == normAlias then
+                if word == alias:lower() then
                     return move
                 end
             end
