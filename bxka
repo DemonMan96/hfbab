@@ -6,38 +6,108 @@ local ScreenGui = Instance.new("ScreenGui")
 ScreenGui.Name = "TKM_UI"
 ScreenGui.Parent = LocalPlayer:WaitForChild("PlayerGui")
 
+-- Ana Frame
 local Frame = Instance.new("Frame")
-Frame.Size = UDim2.new(0, 250, 0, 200)
-Frame.Position = UDim2.new(0.5, -125, 0.5, -100)
-Frame.BackgroundColor3 = Color3.fromRGB(40,40,40)
+Frame.Size = UDim2.new(0, 250, 0, 220)
+Frame.Position = UDim2.new(0.5, -125, 0.5, -110)
+Frame.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+Frame.BorderSizePixel = 0
+Frame.Active = true
+Frame.Draggable = true
+Frame.Visible = true
 Frame.Parent = ScreenGui
+
+-- Köşe yuvarlama
+local UICorner = Instance.new("UICorner", Frame)
+UICorner.CornerRadius = UDim.new(0, 12)
+
+-- Başlık / Kapat Butonu
+local TitleFrame = Instance.new("Frame")
+TitleFrame.Size = UDim2.new(1, 0, 0, 30)
+TitleFrame.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+TitleFrame.BorderSizePixel = 0
+TitleFrame.Parent = Frame
+
+local UICornerTitle = Instance.new("UICorner", TitleFrame)
+UICornerTitle.CornerRadius = UDim.new(0, 12)
+
+local TitleLabel = Instance.new("TextLabel")
+TitleLabel.Text = "Taş Kağıt Makas"
+TitleLabel.Size = UDim2.new(1, -30, 1, 0)
+TitleLabel.Position = UDim2.new(0, 5, 0, 0)
+TitleLabel.BackgroundTransparency = 1
+TitleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+TitleLabel.Font = Enum.Font.SourceSansBold
+TitleLabel.TextSize = 18
+TitleLabel.TextXAlignment = Enum.TextXAlignment.Left
+TitleLabel.Parent = TitleFrame
+
+local CloseBtn = Instance.new("TextButton")
+CloseBtn.Size = UDim2.new(0, 25, 0, 25)
+CloseBtn.Position = UDim2.new(1, -28, 0, 2)
+CloseBtn.Text = "X"
+CloseBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+CloseBtn.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
+CloseBtn.Font = Enum.Font.SourceSansBold
+CloseBtn.TextSize = 18
+CloseBtn.Parent = TitleFrame
+
+CloseBtn.MouseButton1Click:Connect(function()
+    Frame.Visible = false
+end)
+
+-- Göster Butonu
+local ShowBtn = Instance.new("TextButton")
+ShowBtn.Size = UDim2.new(0, 100, 0, 30)
+ShowBtn.Position = UDim2.new(0, 10, 0.9, 0)
+ShowBtn.Text = "Göster UI"
+ShowBtn.BackgroundColor3 = Color3.fromRGB(0, 200, 0)
+ShowBtn.Font = Enum.Font.SourceSansBold
+ShowBtn.TextSize = 16
+ShowBtn.Parent = ScreenGui
+
+ShowBtn.MouseButton1Click:Connect(function()
+    Frame.Visible = true
+end)
 
 -- TextBox (Hedef oyuncu adı)
 local TargetBox = Instance.new("TextBox")
 TargetBox.Size = UDim2.new(0.9, 0, 0, 30)
-TargetBox.Position = UDim2.new(0.05, 0, 0.05, 0)
+TargetBox.Position = UDim2.new(0.05, 0, 0.15, 0)
 TargetBox.PlaceholderText = "Oyuncu adı"
-TargetBox.Text = ""
+TargetBox.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
+TargetBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+TargetBox.ClearTextOnFocus = false
 TargetBox.Parent = Frame
+local TargetCorner = Instance.new("UICorner", TargetBox)
+TargetCorner.CornerRadius = UDim.new(0, 8)
 
--- Toggle Button
+-- Toggle Buton
 local ToggleBtn = Instance.new("TextButton")
 ToggleBtn.Size = UDim2.new(0.9, 0, 0, 30)
-ToggleBtn.Position = UDim2.new(0.05, 0, 0.25, 0)
+ToggleBtn.Position = UDim2.new(0.05, 0, 0.35, 0)
 ToggleBtn.Text = "Oto TKM: Kapalı"
 ToggleBtn.BackgroundColor3 = Color3.fromRGB(200,0,0)
+ToggleBtn.TextColor3 = Color3.fromRGB(255,255,255)
+ToggleBtn.Font = Enum.Font.SourceSansBold
+ToggleBtn.TextSize = 16
 ToggleBtn.Parent = Frame
-
-local AutoEnabled = false
+local ToggleCorner = Instance.new("UICorner", ToggleBtn)
+ToggleCorner.CornerRadius = UDim.new(0, 8)
 
 -- Manuel Butonlar
 local function CreateBtn(txt, posX)
     local b = Instance.new("TextButton")
     b.Size = UDim2.new(0.28, 0, 0, 30)
-    b.Position = UDim2.new(posX, 0, 0.7, 0)
+    b.Position = UDim2.new(posX, 0, 0.65, 0)
     b.Text = txt
     b.BackgroundColor3 = Color3.fromRGB(80,80,80)
+    b.TextColor3 = Color3.fromRGB(255,255,255)
+    b.Font = Enum.Font.SourceSansBold
+    b.TextSize = 16
     b.Parent = Frame
+    local corner = Instance.new("UICorner", b)
+    corner.CornerRadius = UDim.new(0, 8)
     return b
 end
 
