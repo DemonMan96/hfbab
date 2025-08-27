@@ -1,4 +1,4 @@
---// Taş Kağıt Makas Script //--
+--// Taş Kağıt Makas Script (Final) //--
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
 local TextChatService = game:GetService("TextChatService")
@@ -128,7 +128,7 @@ local TasBtn = CreateBtn("Taş", 0.05)
 local KagitBtn = CreateBtn("Kağıt", 0.36)
 local MakasBtn = CreateBtn("Makas", 0.67)
 
--- ✅ Chat'e mesaj yollama (TextChatService)
+-- Chat'e mesaj yollama (TextChatService)
 local function SendChat(msg)
     if TextChatService and TextChatService.TextChannels:FindFirstChild("RBXGeneral") then
         TextChatService.TextChannels.RBXGeneral:SendAsync(msg)
@@ -141,30 +141,32 @@ TasBtn.MouseButton1Click:Connect(function() SendChat("Taş") end)
 KagitBtn.MouseButton1Click:Connect(function() SendChat("Kağıt") end)
 MakasBtn.MouseButton1Click:Connect(function() SendChat("Makas") end)
 
--- Normalize fonksiyonu
-local function Normalize(str)
-    str = string.lower(str)
-    str = string.gsub(str, "ğ", "g")
-    str = string.gsub(str, "ı", "i")
-    str = string.gsub(str, "ş", "s")
-    str = string.gsub(str, "ç", "c")
-    str = string.gsub(str, "ö", "o")
-    str = string.gsub(str, "ü", "u")
-    return str
+-- Normalize ve temizleme fonksiyonu
+local function CleanMessage(msg)
+    msg = string.lower(msg)
+    msg = string.gsub(msg, "ğ", "g")
+    msg = string.gsub(msg, "ı", "i")
+    msg = string.gsub(msg, "ş", "s")
+    msg = string.gsub(msg, "ç", "c")
+    msg = string.gsub(msg, "ö", "o")
+    msg = string.gsub(msg, "ü", "u")
+    -- Noktalama ve özel karakterleri kaldır
+    msg = string.gsub(msg, "[^%w%s]", "")
+    return msg
 end
 
 -- Rakibin hamlelerini algılayan tablo (aliaslar)
 local MoveMap = {
-    tas = {"tas","daş","stone","kaya"},
-    kagit = {"kagit","kağıt","a4","paper","kağıd"},
-    makas = {"makas","makass","scissors","makaz"}
+    tas = {"tas","daş","stone","kaya","t4s","d4ş"},
+    kagit = {"kagit","kağıt","a4","paper","kağıd","k4git","k4g1t","kag1t"},
+    makas = {"makas","makass","scissors","makaz","mks","m4kas","m4k4s","mak4s"}
 }
 
 local function DetectMove(msg)
-    msg = Normalize(msg)
+    msg = CleanMessage(msg)
     for move, aliases in pairs(MoveMap) do
         for _, alias in ipairs(aliases) do
-            local normAlias = Normalize(alias) 
+            local normAlias = CleanMessage(alias)
             if string.find(msg, normAlias) then
                 return move
             end
@@ -173,8 +175,7 @@ local function DetectMove(msg)
     return nil
 end
 
-
--- 🔄 Oto TKM sistemi
+-- Oto TKM sistemi
 TextChatService.MessageReceived:Connect(function(msg)
     if not AutoEnabled then return end
     if not msg or not msg.Text or not msg.TextSource then return end
