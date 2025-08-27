@@ -155,22 +155,24 @@ end
 
 -- Rakibin hamlelerini algılayan tablo (aliaslar)
 local MoveMap = {
-    tas = {"tas","daş","stone"},
-    kagit = {"kagit","kağıt","a4","paper"},
-    makas = {"makas","makass","scissors"}
+    tas = {"tas","daş","stone","kaya"},
+    kagit = {"kagit","kağıt","a4","paper","kağıd"},
+    makas = {"makas","makass","scissors","makaz"}
 }
 
 local function DetectMove(msg)
     msg = Normalize(msg)
     for move, aliases in pairs(MoveMap) do
         for _, alias in ipairs(aliases) do
-            if string.find(msg, alias) then
+            local normAlias = Normalize(alias) 
+            if string.find(msg, normAlias) then
                 return move
             end
         end
     end
     return nil
 end
+
 
 -- 🔄 Oto TKM sistemi
 TextChatService.MessageReceived:Connect(function(msg)
