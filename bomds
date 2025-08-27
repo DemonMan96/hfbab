@@ -166,17 +166,43 @@ local MoveMap = {
 }
 
 local function DetectMove(msg)
-    msg = CleanAndReduce(msg)
-    for move, aliases in pairs(MoveMap) do
-        for _, alias in ipairs(aliases) do
-            local normAlias = CleanAndReduce(alias)
-            if string.find(msg, normAlias) then
-                return move
+    msg = string.lower(msg)
+    msg = string.gsub(msg, "ğ","g")
+    msg = string.gsub(msg, "ı","i")
+    msg = string.gsub(msg, "ş","s")
+    msg = string.gsub(msg, "ç","c")
+    msg = string.gsub(msg, "ö","o")
+    msg = string.gsub(msg, "ü","u")
+    msg = string.gsub(msg, "[^%a%s]", "") -- sadece harf ve boşluk bırak
+
+    -- Tekrarlayan harfleri tekilleştir
+    msg = string.gsub(msg, "(%a)%1+", "%1")
+
+    local words = {}
+    for w in string.gmatch(msg, "%S+") do
+        table.insert(words, w)
+    end
+
+    for _, word in ipairs(words) do
+        for move, aliases in pairs(MoveMap) do
+            for _, alias in ipairs(aliases) do
+                local normAlias = string.lower(alias)
+                normAlias = string.gsub(normAlias, "ğ","g")
+                normAlias = string.gsub(normAlias, "ı","i")
+                normAlias = string.gsub(normAlias, "ş","s")
+                normAlias = string.gsub(normAlias, "ç","c")
+                normAlias = string.gsub(normAlias, "ö","o")
+                normAlias = string.gsub(normAlias, "ü","u")
+                normAlias = string.gsub(normAlias, "(%a)%1+", "%1")
+                if word == normAlias then
+                    return move
+                end
             end
         end
     end
     return nil
 end
+
 
 -- Oto TKM sistemi
 TextChatService.MessageReceived:Connect(function(msg)
