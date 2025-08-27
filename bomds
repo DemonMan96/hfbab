@@ -143,9 +143,9 @@ MakasBtn.MouseButton1Click:Connect(function() SendChat("Makas") end)
 
 -- MoveMap (güncel)
 local MoveMap = {
-    tas = {"tas","daş","stone","kaya","t4s","d4ş","taas","taaas"},
-    kagit = {"kagit","kağıt","a4","paper","kağıd","k4git","k4g1t","kag1t","kaagit"},
-    makas = {"makas","makass","scissors","makaz","mks","m4kas","m4k4s","mak4s","maakas","makaas"}
+    tas = {"tas","daş","stone","kaya","t4s","d4ş"},
+    kagit = {"kagit","kağıt","a4","paper","kağıd","k4git","k4g1t","kag1t"},
+    makas = {"makas","scissors","makaz","mks","m4kas","m4k4s","mak4s"}
 }
 
 -- Mesaj temizleme ve harf tekilleştirme
