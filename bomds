@@ -143,17 +143,12 @@ MakasBtn.MouseButton1Click:Connect(function() SendChat("Makas") end)
 
 -- MoveMap (güncel)
 local MoveMap = {
-    tas = {"tas","daş","stone","kaya","t4s","d4ş"},
-    kagit = {"kagit","kağıt","a4","paper","kağıd","k4git","k4g1t","kag1t"},
-    makas = {"makas","makass","scissors","makaz","mks","m4kas","m4k4s","mak4s"}
+    tas = {"tas","daş","stone","kaya","t4s","d4ş","taas","taaas"},
+    kagit = {"kagit","kağıt","a4","paper","kağıd","k4git","k4g1t","kag1t","kaagit"},
+    makas = {"makas","makass","scissors","makaz","mks","m4kas","m4k4s","mak4s","maakas","makaas"}
 }
 
--- Harf tekrar azaltma (ardışık harfler tekilleştir)
-local function ReduceRepeats(word)
-    return word:gsub("(%a)%1+", "%1")
-end
-
--- Mesaj temizleme ve normalize etme
+-- Mesaj temizleme ve harf tekilleştirme
 local function CleanAndReduce(msg)
     msg = string.lower(msg)
     msg = string.gsub(msg, "ğ","g")
@@ -162,23 +157,26 @@ local function CleanAndReduce(msg)
     msg = string.gsub(msg, "ç","c")
     msg = string.gsub(msg, "ö","o")
     msg = string.gsub(msg, "ü","u")
-    msg = string.gsub(msg, "[^%a%s]", "") -- sadece harf ve boşluk
-    -- Kelime kelime harf tekrarı azalt
-    local result = {}
-    for w in string.gmatch(msg, "%S+") do
-        table.insert(result, w:gsub("(%a)%1+", "%1"))
-    end
-    return result -- kelime listesi olarak döner
+    -- Noktalama ve rakam harici karakterleri sil
+    msg = string.gsub(msg, "[^%a%s]", "")
+    -- Tekrarlayan harfleri tekilleştir
+    msg = string.gsub(msg, "(%a)%1+", "%1")
+    return msg
 end
 
 -- Rakibin hamlesini algılama
 local function DetectMove(msg)
-    local words = CleanAndReduce(msg)
+    msg = CleanAndReduce(msg)
+    local words = {}
+    for w in string.gmatch(msg, "%S+") do
+        table.insert(words, w)
+    end
 
     for _, word in ipairs(words) do
         for move, aliases in pairs(MoveMap) do
             for _, alias in ipairs(aliases) do
-                if word == alias:lower() then
+                local normAlias = CleanAndReduce(alias)
+                if word == normAlias then
                     return move
                 end
             end
