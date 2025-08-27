@@ -148,7 +148,12 @@ local MoveMap = {
     makas = {"makas","makass","scissors","makaz","mks","m4kas","m4k4s","mak4s"}
 }
 
--- Mesaj temizleme ve harf tekilleştirme
+-- Harf tekrar azaltma (ardışık harfler tekilleştir)
+local function ReduceRepeats(word)
+    return word:gsub("(%a)%1+", "%1")
+end
+
+-- Mesaj temizleme ve normalize etme
 local function CleanAndReduce(msg)
     msg = string.lower(msg)
     msg = string.gsub(msg, "ğ","g")
@@ -157,11 +162,12 @@ local function CleanAndReduce(msg)
     msg = string.gsub(msg, "ç","c")
     msg = string.gsub(msg, "ö","o")
     msg = string.gsub(msg, "ü","u")
-    -- Noktalama ve rakam harici karakterleri sil
-    msg = string.gsub(msg, "[^%a%s]", "")
-    -- Tekrarlayan harfleri tekilleştir
-    msg = string.gsub(msg, "(%a)%1+", "%1")
-    return msg
+    msg = string.gsub(msg, "[^%a%s]", "") -- sadece harf ve boşluk
+    local result = {}
+    for w in string.gmatch(msg, "%S+") do
+        table.insert(result, ReduceRepeats(w))
+    end
+    return table.concat(result, " ")
 end
 
 -- Rakibin hamlesini algılama
@@ -175,7 +181,7 @@ local function DetectMove(msg)
     for _, word in ipairs(words) do
         for move, aliases in pairs(MoveMap) do
             for _, alias in ipairs(aliases) do
-                local normAlias = CleanAndReduce(alias)
+                local normAlias = ReduceRepeats(string.lower(alias):gsub("ğ","g"):gsub("ı","i"):gsub("ş","s"):gsub("ç","c"):gsub("ö","o"):gsub("ü","u"))
                 if word == normAlias then
                     return move
                 end
