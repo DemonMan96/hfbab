@@ -1,0 +1,102 @@
+--// Taş Kağıt Makas Script //--
+-- Executor'da localscript gibi çalışır.
+
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+
+-- UI Oluştur
+local ScreenGui = Instance.new("ScreenGui", LocalPlayer:WaitForChild("PlayerGui"))
+ScreenGui.Name = "TKM_UI"
+
+local Frame = Instance.new("Frame", ScreenGui)
+Frame.Size = UDim2.new(0, 250, 0, 200)
+Frame.Position = UDim2.new(0.5, -125, 0.5, -100)
+Frame.BackgroundColor3 = Color3.fromRGB(40,40,40)
+
+-- TextBox (Hedef oyuncu adı)
+local TargetBox = Instance.new("TextBox", Frame)
+TargetBox.Size = UDim2.new(0.9, 0, 0, 30)
+TargetBox.Position = UDim2.new(0.05, 0, 0.05, 0)
+TargetBox.PlaceholderText = "Oyuncu adı"
+TargetBox.Text = ""
+
+-- Toggle Button
+local ToggleBtn = Instance.new("TextButton", Frame)
+ToggleBtn.Size = UDim2.new(0.9, 0, 0, 30)
+ToggleBtn.Position = UDim2.new(0.05, 0, 0.25, 0)
+ToggleBtn.Text = "Oto TKM: Kapalı"
+ToggleBtn.BackgroundColor3 = Color3.fromRGB(200,0,0)
+
+local AutoEnabled = false
+
+-- Manuel Butonlar
+local function CreateBtn(txt, posY)
+    local b = Instance.new("TextButton", Frame)
+    b.Size = UDim2.new(0.28, 0, 0, 30)
+    b.Position = UDim2.new(posY, 0, 0.7, 0)
+    b.Text = txt
+    b.BackgroundColor3 = Color3.fromRGB(80,80,80)
+    return b
+end
+
+local TasBtn = CreateBtn("Taş", 0.05)
+local KagitBtn = CreateBtn("Kağıt", 0.36)
+local MakasBtn = CreateBtn("Makas", 0.67)
+
+-- Chat'e mesaj yollama fonksiyonu
+local function SendChat(msg)
+    game.ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer(msg, "All")
+end
+
+-- Toggle sistemi
+ToggleBtn.MouseButton1Click:Connect(function()
+    AutoEnabled = not AutoEnabled
+    if AutoEnabled then
+        ToggleBtn.Text = "Oto TKM: Açık"
+        ToggleBtn.BackgroundColor3 = Color3.fromRGB(0,200,0)
+    else
+        ToggleBtn.Text = "Oto TKM: Kapalı"
+        ToggleBtn.BackgroundColor3 = Color3.fromRGB(200,0,0)
+    end
+end)
+
+-- Manuel buton click
+TasBtn.MouseButton1Click:Connect(function()
+    SendChat("Taş")
+end)
+KagitBtn.MouseButton1Click:Connect(function()
+    SendChat("Kağıt")
+end)
+MakasBtn.MouseButton1Click:Connect(function()
+    SendChat("Makas")
+end)
+
+-- Oto TKM sistemi
+local function Normalize(str)
+    str = string.lower(str)
+    str = string.gsub(str, "ğ", "g")
+    str = string.gsub(str, "ı", "i")
+    str = string.gsub(str, "ş", "s")
+    str = string.gsub(str, "ç", "c")
+    str = string.gsub(str, "ö", "o")
+    str = string.gsub(str, "ü", "u")
+    return str
+end
+
+game.ReplicatedStorage.DefaultChatSystemChatEvents.OnMessageDoneFiltering.OnClientEvent:Connect(function(msgData)
+    if not AutoEnabled then return end
+    local sender = msgData.FromSpeaker
+    local message = msgData.Message
+
+    if sender == TargetBox.Text and message then
+        local m = Normalize(message)
+
+        if string.find(m, "tas") then
+            SendChat("Kağıt")
+        elseif string.find(m, "kagit") then
+            SendChat("Makas")
+        elseif string.find(m, "makas") then
+            SendChat("Taş")
+        end
+    end
+end)
