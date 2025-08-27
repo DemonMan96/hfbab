@@ -1,6 +1,3 @@
---// Taş Kağıt Makas Script //--
--- Executor'da localscript gibi çalışır.
-
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
 
@@ -48,9 +45,14 @@ local TasBtn = CreateBtn("Taş", 0.05)
 local KagitBtn = CreateBtn("Kağıt", 0.36)
 local MakasBtn = CreateBtn("Makas", 0.67)
 
--- Chat'e mesaj yollama fonksiyonu
+-- ✅ Chat'e mesaj yollama (TextChatService ile)
 local function SendChat(msg)
-    game.ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer(msg, "All")
+    local textChatService = game:GetService("TextChatService")
+    if textChatService and textChatService.TextChannels:FindFirstChild("RBXGeneral") then
+        textChatService.TextChannels.RBXGeneral:SendAsync(msg)
+    else
+        warn("Chat kanalı bulunamadı!")
+    end
 end
 
 -- Toggle sistemi
@@ -90,11 +92,13 @@ local function Normalize(str)
     return str
 end
 
--- Oto TKM sistemi
-game.ReplicatedStorage.DefaultChatSystemChatEvents.OnMessageDoneFiltering.OnClientEvent:Connect(function(msgData)
+-- 🔄 Oto TKM sistemi
+game:GetService("TextChatService").MessageReceived:Connect(function(msg)
     if not AutoEnabled then return end
-    local sender = msgData.FromSpeaker
-    local message = msgData.Message
+    if not msg or not msg.Text or not msg.TextSource then return end
+
+    local sender = msg.TextSource.Name
+    local message = msg.Text
 
     if sender == TargetBox.Text and message then
         local m = Normalize(message)
