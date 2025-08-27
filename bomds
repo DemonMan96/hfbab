@@ -1,4 +1,4 @@
---// Taş Kağıt Makas Script (Final) //--
+--// Taş Kağıt Makas Script (Ultimate Final) //--
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
 local TextChatService = game:GetService("TextChatService")
@@ -128,7 +128,7 @@ local TasBtn = CreateBtn("Taş", 0.05)
 local KagitBtn = CreateBtn("Kağıt", 0.36)
 local MakasBtn = CreateBtn("Makas", 0.67)
 
--- Chat'e mesaj yollama (TextChatService)
+-- Chat'e mesaj yollama
 local function SendChat(msg)
     if TextChatService and TextChatService.TextChannels:FindFirstChild("RBXGeneral") then
         TextChatService.TextChannels.RBXGeneral:SendAsync(msg)
@@ -141,8 +141,8 @@ TasBtn.MouseButton1Click:Connect(function() SendChat("Taş") end)
 KagitBtn.MouseButton1Click:Connect(function() SendChat("Kağıt") end)
 MakasBtn.MouseButton1Click:Connect(function() SendChat("Makas") end)
 
--- Normalize ve temizleme fonksiyonu
-local function CleanMessage(msg)
+-- Normalize ve temizleme (noktalama + tekrarlayan harf)
+local function CleanAndReduce(msg)
     msg = string.lower(msg)
     msg = string.gsub(msg, "ğ", "g")
     msg = string.gsub(msg, "ı", "i")
@@ -152,6 +152,8 @@ local function CleanMessage(msg)
     msg = string.gsub(msg, "ü", "u")
     -- Noktalama ve özel karakterleri kaldır
     msg = string.gsub(msg, "[^%w%s]", "")
+    -- Tekrarlayan harfleri tekilleştir (t.a.a.a.s -> tas)
+    msg = string.gsub(msg, "(%a)%1+", "%1")
     return msg
 end
 
@@ -163,10 +165,10 @@ local MoveMap = {
 }
 
 local function DetectMove(msg)
-    msg = CleanMessage(msg)
+    msg = CleanAndReduce(msg)
     for move, aliases in pairs(MoveMap) do
         for _, alias in ipairs(aliases) do
-            local normAlias = CleanMessage(alias)
+            local normAlias = CleanAndReduce(alias)
             if string.find(msg, normAlias) then
                 return move
             end
