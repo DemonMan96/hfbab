@@ -144,15 +144,16 @@ MakasBtn.MouseButton1Click:Connect(function() SendChat("Makas") end)
 -- Normalize ve temizleme (noktalama + tekrarlayan harf)
 local function CleanAndReduce(msg)
     msg = string.lower(msg)
+    -- Türkçe karakterleri düzelt
     msg = string.gsub(msg, "ğ", "g")
     msg = string.gsub(msg, "ı", "i")
     msg = string.gsub(msg, "ş", "s")
     msg = string.gsub(msg, "ç", "c")
     msg = string.gsub(msg, "ö", "o")
     msg = string.gsub(msg, "ü", "u")
-    -- Noktalama ve özel karakterleri kaldır
-    msg = string.gsub(msg, "[^%w%s]", "")
-    -- Tekrarlayan harfleri tekilleştir (t.a.a.a.s -> tas)
+    -- Noktalama ve özel karakterleri kaldır (önce)
+    msg = string.gsub(msg, "[^%a]", "")
+    -- Tekrarlayan harfleri azalt
     msg = string.gsub(msg, "(%a)%1+", "%1")
     return msg
 end
