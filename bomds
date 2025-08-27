@@ -1,4 +1,4 @@
---// Taş Kağıt Makas Script (Ultimate Final) //--
+--// Taş Kağıt Makas Script (Final) //--
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
 local TextChatService = game:GetService("TextChatService")
@@ -17,86 +17,72 @@ Frame.Active = true
 Frame.Draggable = true
 Frame.Visible = true
 Frame.Parent = ScreenGui
+Instance.new("UICorner", Frame).CornerRadius = UDim.new(0,12)
 
-local UICorner = Instance.new("UICorner", Frame)
-UICorner.CornerRadius = UDim.new(0, 12)
-
--- Başlık / Kapat Butonu
+-- Başlık ve kapat/göster butonları
 local TitleFrame = Instance.new("Frame")
-TitleFrame.Size = UDim2.new(1, 0, 0, 30)
-TitleFrame.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+TitleFrame.Size = UDim2.new(1,0,0,30)
+TitleFrame.BackgroundColor3 = Color3.fromRGB(40,40,40)
 TitleFrame.BorderSizePixel = 0
 TitleFrame.Parent = Frame
-
-local UICornerTitle = Instance.new("UICorner", TitleFrame)
-UICornerTitle.CornerRadius = UDim.new(0, 12)
+Instance.new("UICorner", TitleFrame).CornerRadius = UDim.new(0,12)
 
 local TitleLabel = Instance.new("TextLabel")
 TitleLabel.Text = "Taş Kağıt Makas"
-TitleLabel.Size = UDim2.new(1, -30, 1, 0)
-TitleLabel.Position = UDim2.new(0, 5, 0, 0)
+TitleLabel.Size = UDim2.new(1,-30,1,0)
+TitleLabel.Position = UDim2.new(0,5,0,0)
 TitleLabel.BackgroundTransparency = 1
-TitleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+TitleLabel.TextColor3 = Color3.fromRGB(255,255,255)
 TitleLabel.Font = Enum.Font.SourceSansBold
 TitleLabel.TextSize = 18
 TitleLabel.TextXAlignment = Enum.TextXAlignment.Left
 TitleLabel.Parent = TitleFrame
 
 local CloseBtn = Instance.new("TextButton")
-CloseBtn.Size = UDim2.new(0, 25, 0, 25)
-CloseBtn.Position = UDim2.new(1, -28, 0, 2)
+CloseBtn.Size = UDim2.new(0,25,0,25)
+CloseBtn.Position = UDim2.new(1,-28,0,2)
 CloseBtn.Text = "X"
-CloseBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-CloseBtn.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
+CloseBtn.TextColor3 = Color3.fromRGB(255,255,255)
+CloseBtn.BackgroundColor3 = Color3.fromRGB(200,0,0)
 CloseBtn.Font = Enum.Font.SourceSansBold
 CloseBtn.TextSize = 18
 CloseBtn.Parent = TitleFrame
+CloseBtn.MouseButton1Click:Connect(function() Frame.Visible = false end)
 
-CloseBtn.MouseButton1Click:Connect(function()
-    Frame.Visible = false
-end)
-
--- Göster Butonu
 local ShowBtn = Instance.new("TextButton")
-ShowBtn.Size = UDim2.new(0, 100, 0, 30)
-ShowBtn.Position = UDim2.new(0, 10, 0.9, 0)
+ShowBtn.Size = UDim2.new(0,100,0,30)
+ShowBtn.Position = UDim2.new(0,10,0.9,0)
 ShowBtn.Text = "Göster UI"
-ShowBtn.BackgroundColor3 = Color3.fromRGB(0, 200, 0)
+ShowBtn.BackgroundColor3 = Color3.fromRGB(0,200,0)
 ShowBtn.Font = Enum.Font.SourceSansBold
 ShowBtn.TextSize = 16
 ShowBtn.Parent = ScreenGui
-
-ShowBtn.MouseButton1Click:Connect(function()
-    Frame.Visible = true
-end)
+ShowBtn.MouseButton1Click:Connect(function() Frame.Visible = true end)
 
 -- TextBox (Hedef oyuncu adı)
 local TargetBox = Instance.new("TextBox")
-TargetBox.Size = UDim2.new(0.9, 0, 0, 30)
-TargetBox.Position = UDim2.new(0.05, 0, 0.15, 0)
+TargetBox.Size = UDim2.new(0.9,0,0,30)
+TargetBox.Position = UDim2.new(0.05,0,0.15,0)
 TargetBox.PlaceholderText = "Oyuncu adı"
-TargetBox.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
-TargetBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+TargetBox.BackgroundColor3 = Color3.fromRGB(70,70,70)
+TargetBox.TextColor3 = Color3.fromRGB(255,255,255)
 TargetBox.ClearTextOnFocus = false
 TargetBox.Parent = Frame
-local TargetCorner = Instance.new("UICorner", TargetBox)
-TargetCorner.CornerRadius = UDim.new(0, 8)
+Instance.new("UICorner", TargetBox).CornerRadius = UDim.new(0,8)
 
 -- Toggle Buton
 local ToggleBtn = Instance.new("TextButton")
-ToggleBtn.Size = UDim2.new(0.9, 0, 0, 30)
-ToggleBtn.Position = UDim2.new(0.05, 0, 0.35, 0)
+ToggleBtn.Size = UDim2.new(0.9,0,0,30)
+ToggleBtn.Position = UDim2.new(0.05,0,0.35,0)
 ToggleBtn.Text = "Oto TKM: Kapalı"
 ToggleBtn.BackgroundColor3 = Color3.fromRGB(200,0,0)
 ToggleBtn.TextColor3 = Color3.fromRGB(255,255,255)
 ToggleBtn.Font = Enum.Font.SourceSansBold
 ToggleBtn.TextSize = 16
 ToggleBtn.Parent = Frame
-local ToggleCorner = Instance.new("UICorner", ToggleBtn)
-ToggleCorner.CornerRadius = UDim.new(0, 8)
+Instance.new("UICorner", ToggleBtn).CornerRadius = UDim.new(0,8)
 
 local AutoEnabled = false
-
 ToggleBtn.MouseButton1Click:Connect(function()
     AutoEnabled = not AutoEnabled
     if AutoEnabled then
@@ -109,24 +95,23 @@ ToggleBtn.MouseButton1Click:Connect(function()
 end)
 
 -- Manuel Butonlar
-local function CreateBtn(txt, posX)
+local function CreateBtn(txt,posX)
     local b = Instance.new("TextButton")
-    b.Size = UDim2.new(0.28, 0, 0, 30)
-    b.Position = UDim2.new(posX, 0, 0.65, 0)
+    b.Size = UDim2.new(0.28,0,0,30)
+    b.Position = UDim2.new(posX,0,0.65,0)
     b.Text = txt
     b.BackgroundColor3 = Color3.fromRGB(80,80,80)
     b.TextColor3 = Color3.fromRGB(255,255,255)
     b.Font = Enum.Font.SourceSansBold
     b.TextSize = 16
     b.Parent = Frame
-    local corner = Instance.new("UICorner", b)
-    corner.CornerRadius = UDim.new(0, 8)
+    Instance.new("UICorner",b).CornerRadius = UDim.new(0,8)
     return b
 end
 
-local TasBtn = CreateBtn("Taş", 0.05)
-local KagitBtn = CreateBtn("Kağıt", 0.36)
-local MakasBtn = CreateBtn("Makas", 0.67)
+local TasBtn = CreateBtn("Taş",0.05)
+local KagitBtn = CreateBtn("Kağıt",0.36)
+local MakasBtn = CreateBtn("Makas",0.67)
 
 -- Chat'e mesaj yollama
 local function SendChat(msg)
@@ -141,42 +126,39 @@ TasBtn.MouseButton1Click:Connect(function() SendChat("Taş") end)
 KagitBtn.MouseButton1Click:Connect(function() SendChat("Kağıt") end)
 MakasBtn.MouseButton1Click:Connect(function() SendChat("Makas") end)
 
--- MoveMap (güncel)
+-- MoveMap
 local MoveMap = {
-    tas = {"tas","daş","stone","kaya","t4s","d4ş"},
+    tas = {"tas","taas","daş","stone","kaya","t4s","d4ş"},
     kagit = {"kagit","kağıt","a4","paper","kağıd","k4git","k4g1t","kag1t"},
-    makas = {"makas","scissors","makaz","mks","m4kas","m4k4s","mak4s"}
+    makas = {"makas","makass","scissors","makaz","mks","m4kas","m4k4s","mak4s"}
 }
 
--- Mesaj temizleme ve harf tekilleştirme
-local function CleanAndReduce(msg)
-    msg = string.lower(msg)
-    msg = string.gsub(msg, "ğ","g")
-    msg = string.gsub(msg, "ı","i")
-    msg = string.gsub(msg, "ş","s")
-    msg = string.gsub(msg, "ç","c")
-    msg = string.gsub(msg, "ö","o")
-    msg = string.gsub(msg, "ü","u")
-    -- Noktalama ve rakam harici karakterleri sil
-    msg = string.gsub(msg, "[^%a%s]", "")
-    -- Tekrarlayan harfleri tekilleştir
-    msg = string.gsub(msg, "(%a)%1+", "%1")
-    return msg
+-- Mesaj normalizasyon ve harf azaltma
+local function Normalize(word)
+    word = string.lower(word)
+    word = string.gsub(word,"ğ","g")
+    word = string.gsub(word,"ı","i")
+    word = string.gsub(word,"ş","s")
+    word = string.gsub(word,"ç","c")
+    word = string.gsub(word,"ö","o")
+    word = string.gsub(word,"ü","u")
+    word = string.gsub(word,"[^%a]","")
+    word = string.gsub(word,"(%a)%1+","%1")
+    return word
 end
 
 -- Rakibin hamlesini algılama
+local LastReply = {} -- çift cevap engelleme için
 local function DetectMove(msg)
-    msg = CleanAndReduce(msg)
     local words = {}
-    for w in string.gmatch(msg, "%S+") do
-        table.insert(words, w)
+    for w in string.gmatch(msg,"%S+") do
+        table.insert(words, Normalize(w))
     end
 
     for _, word in ipairs(words) do
         for move, aliases in pairs(MoveMap) do
             for _, alias in ipairs(aliases) do
-                local normAlias = CleanAndReduce(alias)
-                if word == normAlias then
+                if word == Normalize(alias) then
                     return move
                 end
             end
@@ -185,7 +167,7 @@ local function DetectMove(msg)
     return nil
 end
 
--- Oto TKM sistemi
+-- Oto TKM
 TextChatService.MessageReceived:Connect(function(msg)
     if not AutoEnabled then return end
     if not msg or not msg.Text or not msg.TextSource then return end
@@ -194,6 +176,10 @@ TextChatService.MessageReceived:Connect(function(msg)
     local message = msg.Text
 
     if sender == TargetBox.Text and message then
+        -- Çift cevap kontrolü
+        if LastReply[sender] == message then return end
+        LastReply[sender] = message
+
         local detected = DetectMove(message)
         if detected == "tas" then
             SendChat("Kağıt")
@@ -202,5 +188,8 @@ TextChatService.MessageReceived:Connect(function(msg)
         elseif detected == "makas" then
             SendChat("Taş")
         end
+
+        -- 1 saniye sonra reset, tekrar cevap gelebilsin
+        delay(1,function() LastReply[sender] = nil end)
     end
 end)
